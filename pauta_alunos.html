@@ -123,7 +123,7 @@
   let contador = alunos.length > 0 ? Math.max(...alunos.map(a => a.id)) : 0;
 
   function verTabela() {
-    window.location.href = 'tabelas.html';
+    window.location.href = 'tabela.html';
   }
 
   function limparFormulario() {
@@ -199,7 +199,7 @@
     // Opcional: Perguntar se quer ver a tabela
     setTimeout(() => {
       if (confirm('Aluno adicionado! Deseja visualizar a tabela agora?')) {
-        window.location.href = 'tabelas.html';
+        window.location.href = 'tabela.html';
       }
     }, 500);
   });
