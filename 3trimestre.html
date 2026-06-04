@@ -1,0 +1,103 @@
+<header>
+  <h1>Pauta de Avaliação</h1>
+  <p>Registo de alunos e classificações</p>
+</header>
+
+<!-- FORM -->
+<div class="card">
+  <div class="card-title">➕ Dados do Aluno</div>
+  <div class="form-grid">
+    <div class="form-group">
+      <label>Nome completo</label>
+      <input type="text" id="nome" placeholder="ex: Ana Ferreira">
+    </div>
+    <div class="form-group">
+      <label>Idade</label>
+      <input type="number" id="idade" placeholder="ex: 16" min="1" max="99">
+    </div>
+    <div class="form-group">
+      <label>Sala</label>
+      <input type="text" id="sala" placeholder="ex: 101">
+    </div>
+    <div class="form-group">
+      <label>Turma</label>
+      <input type="text" id="turma" placeholder="ex: 10.ª A">
+    </div>
+    <div class="form-group">
+      <label>Nº do Aluno</label>
+      <input type="text" id="numero" placeholder="ex: 2024001">
+    </div>
+    <div class="form-group">
+      <label>BI / NIF</label>
+      <input type="text" id="bi" placeholder="ex: 001234567LA041">
+    </div>
+  </div>
+
+  <hr class="divider">
+  <div class="card-title">📊 Notas (0 – 20)</div>
+  <div class="notas-row">
+    <div class="form-group" id="grp-n1">
+      <label>Nota 1</label>
+      <input type="number" id="nota1" class="nota" placeholder="0 – 20" min="0" max="20" step="0.1">
+      <span class="error-msg">Insira um valor entre 0 e 20</span>
+    </div>
+    <div class="form-group" id="grp-n2">
+      <label>Nota 2</label>
+      <input type="number" id="nota2" class="nota" placeholder="0 – 20" min="0" max="20" step="0.1">
+      <span class="error-msg">Insira um valor entre 0 e 20</span>
+    </div>
+    <div class="form-group" id="grp-n3">
+      <label>Nota 3</label>
+      <input type="number" id="nota3" class="nota" placeholder="0 – 20" min="0" max="20" step="0.1">
+      <span class="error-msg">Insira um valor entre 0 e 20</span>
+    </div>
+  </div>
+
+  <div class="btn-row">
+    <button class="btn btn-primary" onclick="adicionarAluno()">Adicionar aluno</button>
+    <button class="btn btn-outline" onclick="limparFormulario()">Limpar campos</button>
+  </div>
+</div>
+
+
+<div class="table-header-row">
+  <div class="table-title">📋 Lista de alunos</div>
+  <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
+    <div class="counter">Total: <span id="cnt-total">0</span> &nbsp;|&nbsp; ✅ <span id="cnt-apto">0</span> &nbsp;|&nbsp; ⚠️ <span id="cnt-recurso">0</span> &nbsp;|&nbsp; ❌ <span id="cnt-napto">0</span></div>
+    <button class="btn btn-danger" onclick="limparTudo()">🗑 Limpar tudo</button>
+  </div>
+</div>
+
+<div class="table-wrapper">
+  <table id="tabela">
+    <thead>
+      <tr>
+        <th>#</th>
+        <th>Nome</th>
+        <th>Idade</th>
+        <th>Sala</th>
+        <th>Turma</th>
+        <th>Nº Aluno</th>
+        <th>BI</th>
+        <th>Nota 1</th>
+        <th>Nota 2</th>
+        <th>Nota 3</th>
+        <th>Média</th>
+        <th>Resultado</th>
+        <th>–</th>
+      </tr>
+    </thead>
+    <tbody id="tbody">
+      <tr id="empty-row">
+        <td colspan="13">
+          <div class="empty">
+            <div class="icon">📄</div>
+            Nenhum aluno registado ainda.
+          </div>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<div id="toast"></div>
