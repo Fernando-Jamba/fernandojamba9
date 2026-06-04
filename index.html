@@ -3,69 +3,601 @@
 <html lang="pt">
 <head>
     <meta charset="UTF-8">
-    <title>Home - TLP</title>
-    <link rel="stylesheet" href="css/style.css">
-   
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>Home - TLP | Sistema de Avaliação</title>
+    <style>
+        * { 
+            margin: 0; 
+            padding: 0; 
+            box-sizing: border-box; 
+        }
+
+        body {
+            font-family: 'Segoe UI', 'DM Mono', 'Courier New', monospace;
+            background: linear-gradient(135deg, #1a1a3e 0%, #16213e 100%);
+            color: #e0e0e0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* ==================== NAVBAR ==================== */
+        .navbar {
+            background: linear-gradient(135deg, rgba(25, 25, 112, 0.95) 0%, rgba(0, 0, 139, 0.95) 100%);
+            backdrop-filter: blur(10px);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            border-bottom: 2px solid #ff6b6b;
+        }
+
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #ff6b6b;
+            text-decoration: none;
+            font-family: 'Syne', sans-serif;
+            letter-spacing: 2px;
+            transition: transform 0.3s ease;
+        }
+
+        .logo:hover {
+            transform: scale(1.05);
+        }
+
+        .logo span {
+            color: #4ecdc4;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 2rem;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        .nav-menu li {
+            position: relative;
+        }
+
+        .nav-menu li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: block;
+        }
+
+        .nav-menu li a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2px;
+            background: linear-gradient(90deg, #ff6b6b, #4ecdc4);
+            transition: width 0.3s ease;
+        }
+
+        .nav-menu li a:hover::before {
+            width: 80%;
+        }
+
+        .nav-menu li a:hover {
+            color: #ff6b6b;
+            transform: translateY(-2px);
+        }
+
+        .nav-menu li a.active {
+            color: #ff6b6b;
+        }
+
+        .nav-menu li a.active::before {
+            width: 80%;
+        }
+
+        /* ==================== DROPDOWN MENU ==================== */
+        .dropdown {
+            position: relative;
+        }
+
+        .dropdown-toggle {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+        }
+
+        .dropdown-toggle .arrow {
+            font-size: 0.7rem;
+            transition: transform 0.3s ease;
+        }
+
+        .dropdown:hover .arrow {
+            transform: rotate(180deg);
+        }
+
+        .dropdown-menu {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: linear-gradient(135deg, #1e1e4a 0%, #16213e 100%);
+            min-width: 200px;
+            border-radius: 12px;
+            padding: 0.5rem 0;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 107, 107, 0.3);
+            z-index: 100;
+        }
+
+        .dropdown:hover .dropdown-menu {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+
+        .dropdown-menu li {
+            list-style: none;
+        }
+
+        .dropdown-menu li a {
+            padding: 0.75rem 1.5rem;
+            color: #e0e0e0;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border-left: 3px solid transparent;
+        }
+
+        .dropdown-menu li a:hover {
+            background: rgba(255, 107, 107, 0.1);
+            color: #ff6b6b;
+            padding-left: 1.8rem;
+            border-left-color: #ff6b6b;
+        }
+
+        .dropdown-menu li a:hover::before {
+            display: none;
+        }
+
+        /* Menu Hamburger */
+        .hamburger {
+            display: none;
+            flex-direction: column;
+            cursor: pointer;
+        }
+
+        .bar {
+            width: 25px;
+            height: 3px;
+            background: #fff;
+            margin: 3px 0;
+            transition: 0.3s;
+            border-radius: 2px;
+        }
+
+        /* ==================== MAIN CONTENT ==================== */
+        .main-content {
+            flex: 1;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3rem 2rem;
+            width: 100%;
+        }
+
+        .hero {
+            text-align: center;
+            margin-bottom: 4rem;
+            animation: fadeInUp 0.8s ease;
+        }
+
+        .hero h1 {
+            font-family: 'Syne', sans-serif;
+            font-size: clamp(1.8rem, 5vw, 3.5rem);
+            font-weight: 800;
+            background: linear-gradient(135deg, #fff 0%, #ff6b6b 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            margin-bottom: 1rem;
+            letter-spacing: -0.02em;
+        }
+
+        .hero .badge {
+            display: inline-block;
+            background: rgba(255, 107, 107, 0.2);
+            color: #ff6b6b;
+            padding: 0.5rem 1rem;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid rgba(255, 107, 107, 0.3);
+        }
+
+        /* Cards Section */
+        .cards-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+            margin: 3rem 0;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            cursor: pointer;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            background: rgba(255, 255, 255, 0.1);
+            border-color: #ff6b6b;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .card h3 {
+            color: #ff6b6b;
+            margin-bottom: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .card p {
+            color: #b0b0b0;
+            line-height: 1.6;
+            margin-bottom: 1rem;
+        }
+
+        .card-link {
+            color: #4ecdc4;
+            text-decoration: none;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: gap 0.3s ease;
+        }
+
+        .card-link:hover {
+            gap: 0.8rem;
+        }
+
+        /* Info Section */
+        .info-section {
+            background: linear-gradient(135deg, rgba(255, 107, 107, 0.1) 0%, rgba(78, 205, 196, 0.1) 100%);
+            border-radius: 20px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .info-section p {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #d0d0d0;
+        }
+
+        /* Footer */
+        footer {
+            background: linear-gradient(135deg, #0f0f2d 0%, #1a1a3e 100%);
+            text-align: center;
+            padding: 2rem;
+            margin-top: 3rem;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            color: #888;
+            font-size: 0.9rem;
+        }
+
+        footer p {
+            margin: 0;
+        }
+
+        footer .heart {
+            color: #ff6b6b;
+            display: inline-block;
+            animation: heartbeat 1.5s ease infinite;
+        }
+
+        /* Animações */
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes heartbeat {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.2);
+            }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #1a1a3e;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #ff6b6b, #4ecdc4);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #ff5252, #3dbdb4);
+        }
+
+        /* ==================== RESPONSIVIDADE ==================== */
+        @media (max-width: 768px) {
+            .navbar {
+                padding: 1rem;
+            }
+
+            .hamburger {
+                display: flex;
+            }
+
+            .nav-menu {
+                position: fixed;
+                left: -100%;
+                top: 70px;
+                flex-direction: column;
+                background: linear-gradient(135deg, #191970 0%, #00008b 100%);
+                width: 100%;
+                text-align: center;
+                transition: 0.3s;
+                box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+                padding: 2rem 0;
+                gap: 1.5rem;
+                max-height: calc(100vh - 70px);
+                overflow-y: auto;
+            }
+
+            .nav-menu.active {
+                left: 0;
+            }
+
+            .nav-menu li {
+                width: 100%;
+            }
+
+            .nav-menu li a {
+                display: inline-block;
+                padding: 0.8rem;
+            }
+
+            /* Dropdown responsivo */
+            .dropdown-menu {
+                position: static;
+                opacity: 1;
+                visibility: visible;
+                transform: none;
+                background: rgba(0, 0, 0, 0.3);
+                box-shadow: none;
+                margin-top: 0.5rem;
+                display: none;
+                border: none;
+            }
+
+            .dropdown.active .dropdown-menu {
+                display: block;
+            }
+
+            .dropdown-toggle {
+                justify-content: center;
+            }
+
+            .main-content {
+                padding: 2rem 1rem;
+            }
+
+            .cards-container {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+
+            .card {
+                padding: 1.5rem;
+            }
+
+            .hero h1 {
+                font-size: 1.8rem;
+            }
+
+            .info-section p {
+                font-size: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .hero h1 {
+                font-size: 1.5rem;
+            }
+
+            .badge {
+                font-size: 0.75rem;
+            }
+
+            .card h3 {
+                font-size: 1.3rem;
+            }
+
+            footer {
+                padding: 1.5rem;
+                font-size: 0.8rem;
+            }
+        }
+
+        /* Hamburger Animation */
+        .hamburger.active .bar:nth-child(1) {
+            transform: rotate(-45deg) translate(-5px, 6px);
+        }
+
+        .hamburger.active .bar:nth-child(2) {
+            opacity: 0;
+        }
+
+        .hamburger.active .bar:nth-child(3) {
+            transform: rotate(45deg) translate(-5px, -6px);
+        }
+    </style>
 </head>
-<style>
-     * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'DM Mono', monospace;
-    background-color: midnightblue;
-    color: var(--text);
-    min-height: 100vh;
-    padding: 2rem 1.5rem 4rem;
-  }
-
-  /* HEADER */
-  header {
-    text-align: center;
-    margin-bottom: 3rem;
-    position: relative;
-  }
-  header::after {
-    content: '';
-    display: block;
-    width: 60px;
-    height: 3px;
-    background: var(--accent);
-    margin: 1.2rem auto 0;
-  }
-  header h1 {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
-    letter-spacing: -0.02em;
-    color: #fff;
-  }
-  header p {
-    color: var(--muted);
-    font-size: 0.8rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-top: 0.4rem;
-  }
-a {
-background-color: ;
-}
-</style>
 <body>
- <header>
- <nav>
-    <ul>
-        <li><a href="index.html">HOME</a></li>
-          <li><a href="tabela.html">TRIMESTRES</a></li>
-            <li> <a href="">CONTACTO</a></li>
-        
-    </ul>
- </nav>
-</header>
-<h1>Seja bem-vindo a minha prova de tlp.</h1>
-<main>
-    <p>Todas as informações sobre as trafas de todos os trimestres.</p>
-    <p>você encontra logo aqui.</p>
-</main>
-<footer>Site criado pelo Fernando Jamba</footer>
+    <!-- Navbar com Dropdown -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <a href="index.html" class="logo">TLP<span>+</span></a>
+            <div class="hamburger" id="hamburger">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </div>
+            <ul class="nav-menu" id="nav-menu">
+                <li><a href="index.html" class="active">🏠 HOME</a></li>
+                
+                <!-- Dropdown Trimestre com 3 links -->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle">
+                        📊 TRIMESTRES <span class="arrow">▼</span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="1trimestre.html">📘 1º Trimestre</a></li>
+                        <li><a href="2trimestre.html">📙 2º Trimestre</a></li>
+                        <li><a href="3trimestre.html">📗 3º Trimestre</a></li>
+                    </ul>
+                </li>
+                
+                <li><a href="#">📧 CONTACTO</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="hero">
+            <div class="badge">✨ PROVA DE TLP - 2026 ✨</div>
+            <h1>Seja bem-vindo à minha <br>prova de TLP</h1>
+        </div>
+
+        <!-- Cards Informativos -->
+        <div class="cards-container">
+            <div class="card" onclick="window.location.href='primeiro-trimestre.html'">
+                <div class="card-icon">📘</div>
+                <h3>1º Trimestre</h3>
+                <p>Avaliações, trabalhos e notas do primeiro trimestre do ano letivo.</p>
+                <span class="card-link">Ver detalhes →</span>
+            </div>
+            <div class="card" onclick="window.location.href='segundo-trimestre.html'">
+                <div class="card-icon">📙</div>
+                <h3>2º Trimestre</h3>
+                <p>Desempenho e resultados do segundo período letivo.</p>
+                <span class="card-link">Ver notas →</span>
+            </div>
+            <div class="card" onclick="window.location.href='terceiro-trimestre.html'">
+                <div class="card-icon">📗</div>
+                <h3>3º Trimestre</h3>
+                <p>Avaliações finais e resultados do terceiro trimestre.</p>
+                <span class="card-link">Saiba mais →</span>
+            </div>
+        </div>
+
+        <!-- Informações Adicionais -->
+        <div class="info-section">
+            <p>📌 <strong>Informação importante:</strong> Todas as informações sobre as tarefas de todos os trimestres estão disponíveis no menu suspenso <strong>TRIMESTRES</strong>. Organize seus estudos e acompanhe seu desempenho acadêmico.</p>
+            <p style="margin-top: 1rem;">📅 <strong>Período letivo:</strong> 1º, 2º e 3º Trimestre - Avaliações contínuas e exames finais.</p>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer>
+        <p>Site criado por <strong style="color: #ff6b6b;">Fernando Jamba</strong> com <span class="heart">❤️</span> para a disciplina de TLP</p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem;">&copy; 2026 - Todos os direitos reservados</p>
+    </footer>
+
+    <!-- Script para menu responsivo e dropdown mobile -->
+    <script>
+        const hamburger = document.getElementById('hamburger');
+        const navMenu = document.getElementById('nav-menu');
+
+        // Toggle menu hamburger
+        hamburger.addEventListener('click', () => {
+            hamburger.classList.toggle('active');
+            navMenu.classList.toggle('active');
+        });
+
+        // Fechar menu ao clicar em um link (exceto dropdown)
+        document.querySelectorAll('.nav-menu > li > a:not(.dropdown-toggle)').forEach(link => {
+            link.addEventListener('click', () => {
+                hamburger.classList.remove('active');
+                navMenu.classList.remove('active');
+            });
+        });
+
+        // Para dropdown em dispositivos móveis
+        if (window.innerWidth <= 768) {
+            const dropdownToggle = document.querySelector('.dropdown-toggle');
+            const dropdown = document.querySelector('.dropdown');
+            
+            dropdownToggle.addEventListener('click', function(e) {
+                e.preventDefault();
+                dropdown.classList.toggle('active');
+            });
+        }
+
+        // Adicionar classe active ao link atual
+        const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+        document.querySelectorAll('.nav-menu a').forEach(link => {
+            if (link.getAttribute('href') === currentPage) {
+                link.classList.add('active');
+            }
+        });
+
+        // Reavaliar dropdown em resize
+        window.addEventListener('resize', function() {
+            if (window.innerWidth > 768) {
+                const dropdown = document.querySelector('.dropdown');
+                if (dropdown.classList.contains('active')) {
+                    dropdown.classList.remove('active');
+                }
+            }
+        });
+    </script>
 </body>
 </html>
