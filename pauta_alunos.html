@@ -1,552 +1,208 @@
 <!DOCTYPE html>
 <html lang="pt">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Pauta de Avaliação</title>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:wght@300;400;500&display=swap" rel="stylesheet">
-<style>
-  :root {
-    --bg: #0d0f14;
-    --surface: #161921;
-    --border: #252a35;
-    --apto: #00e5a0;
-    --apto-dim: rgba(0,229,160,0.12);
-    --recurso: #f5c542;
-    --recurso-dim: rgba(245,197,66,0.12);
-    --napto: #ff4f6e;
-    --napto-dim: rgba(255,79,110,0.12);
-    --accent: #5b8cff;
-    --text: #e8eaf0;
-    --muted: #6b7385;
-  }
-
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-
-  body {
-    font-family: 'DM Mono', monospace;
-    background: var(--bg);
-    color: var(--text);
-    min-height: 100vh;
-    padding: 2rem 1.5rem 4rem;
-  }
-
-  /* HEADER */
-  header {
-    text-align: center;
-    margin-bottom: 3rem;
-    position: relative;
-  }
-  header::after {
-    content: '';
-    display: block;
-    width: 60px;
-    height: 3px;
-    background: var(--accent);
-    margin: 1.2rem auto 0;
-  }
-  header h1 {
-    font-family: 'Syne', sans-serif;
-    font-weight: 800;
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
-    letter-spacing: -0.02em;
-    color: #fff;
-  }
-  header p {
-    color: var(--muted);
-    font-size: 0.8rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    margin-top: 0.4rem;
-  }
-
-  /* FORM CARD */
-  .card {
-    background: var(--surface);
-    border: 1px solid var(--border);
-    border-radius: 12px;
-    padding: 2rem;
-    max-width: 860px;
-    margin: 0 auto 2.5rem;
-  }
-  .card-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 0.75rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--accent);
-    margin-bottom: 1.5rem;
-  }
-
-  .form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 1rem 1.2rem;
-  }
-  .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
-  .form-group.full { grid-column: 1 / -1; }
-  .form-group label {
-    font-size: 0.68rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .form-group input {
-    background: var(--bg);
-    border: 1px solid var(--border);
-    border-radius: 7px;
-    padding: 0.62rem 0.85rem;
-    font-family: 'DM Mono', monospace;
-    font-size: 0.88rem;
-    color: var(--text);
-    transition: border-color 0.2s;
-    outline: none;
-  }
-  .form-group input:focus { border-color: var(--accent); }
-  .form-group input::placeholder { color: var(--muted); }
-  .form-group input.nota { border-color: #2d3245; }
-  .form-group input.nota:focus { border-color: var(--accent); }
-
-  /* NOTAS ROW */
-  .notas-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 1rem 1.2rem;
-    margin-top: 0.2rem;
-  }
-
-  /* DIVIDER */
-  .divider {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 1.6rem 0 1.4rem;
-  }
-
-  /* BUTTONS */
-  .btn-row {
-    display: flex;
-    gap: 0.8rem;
-    flex-wrap: wrap;
-    margin-top: 1.6rem;
-  }
-  .btn {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 0.8rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    border: none;
-    border-radius: 7px;
-    padding: 0.7rem 1.5rem;
-    cursor: pointer;
-    transition: opacity 0.18s, transform 0.12s;
-  }
-  .btn:active { transform: scale(0.97); }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-primary:hover { opacity: 0.85; }
-  .btn-danger { background: transparent; border: 1px solid var(--napto); color: var(--napto); }
-  .btn-danger:hover { background: var(--napto-dim); }
-  .btn-outline { background: transparent; border: 1px solid var(--border); color: var(--muted); }
-  .btn-outline:hover { border-color: var(--text); color: var(--text); }
-
-  /* TABLE */
-  .table-wrapper {
-    max-width: 1100px;
-    margin: 0 auto;
-    overflow-x: auto;
-  }
-  .table-header-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    max-width: 1100px;
-    margin: 0 auto 1rem;
-    flex-wrap: wrap;
-    gap: 0.6rem;
-  }
-  .table-title {
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 0.75rem;
-    letter-spacing: 0.14em;
-    text-transform: uppercase;
-    color: var(--muted);
-  }
-  .counter {
-    font-size: 0.72rem;
-    color: var(--muted);
-    letter-spacing: 0.06em;
-  }
-  .counter span { color: var(--accent); font-weight: 700; }
-
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 0.8rem;
-  }
-  thead tr {
-    border-bottom: 2px solid var(--border);
-  }
-  thead th {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.65rem;
-    font-weight: 700;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: var(--muted);
-    padding: 0.7rem 0.8rem;
-    text-align: left;
-    white-space: nowrap;
-  }
-  tbody tr {
-    border-bottom: 1px solid var(--border);
-    transition: background 0.15s;
-  }
-  tbody tr:hover { background: rgba(255,255,255,0.025); }
-  tbody td {
-    padding: 0.75rem 0.8rem;
-    white-space: nowrap;
-  }
-
-  /* STATUS BADGE */
-  .badge {
-    display: inline-block;
-    font-family: 'Syne', sans-serif;
-    font-weight: 700;
-    font-size: 0.65rem;
-    letter-spacing: 0.1em;
-    text-transform: uppercase;
-    padding: 0.28rem 0.75rem;
-    border-radius: 20px;
-    border: 1px solid transparent;
-  }
-  .badge-apto    { background: var(--apto-dim);    color: var(--apto);    border-color: var(--apto);    }
-  .badge-napto   { background: var(--napto-dim);   color: var(--napto);   border-color: var(--napto);   }
-  .badge-recurso { background: var(--recurso-dim); color: var(--recurso); border-color: var(--recurso); }
-
-  /* MEDIA */
-  .media-badge { font-weight: 500; }
-  .media-apto    { color: var(--apto); }
-  .media-recurso { color: var(--recurso); }
-  .media-napto   { color: var(--napto); }
-
-  /* EMPTY */
-  .empty {
-    text-align: center;
-    padding: 3rem;
-    color: var(--muted);
-    font-size: 0.8rem;
-    letter-spacing: 0.06em;
-  }
-  .empty .icon { font-size: 2rem; margin-bottom: 0.5rem; opacity: 0.4; }
-
-  /* TOAST */
-  #toast {
-    position: fixed;
-    bottom: 2rem;
-    right: 2rem;
-    background: var(--surface);
-    border: 1px solid var(--accent);
-    color: var(--text);
-    padding: 0.75rem 1.25rem;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.3s, transform 0.3s;
-    pointer-events: none;
-    z-index: 999;
-  }
-  #toast.show { opacity: 1; transform: translateY(0); }
-
-  /* ERROR */
-  .error-msg {
-    font-size: 0.7rem;
-    color: var(--napto);
-    margin-top: 0.25rem;
-    display: none;
-  }
-  .has-error input { border-color: var(--napto) !important; }
-  .has-error .error-msg { display: block; }
-
-  /* ACTION BTN inside table */
-  .btn-del {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--muted);
-    font-size: 1rem;
-    transition: color 0.15s;
-    padding: 0.2rem 0.4rem;
-  }
-  .btn-del:hover { color: var(--napto); }
-
-  /* Scrollbar */
-  ::-webkit-scrollbar { width: 5px; height: 5px; }
-  ::-webkit-scrollbar-track { background: transparent; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+  <title>Pauta de Avaliação - Formulário</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      padding-bottom: 30px;
+    }
+    .card {
+      border-radius: 15px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 768px) {
+      .container {
+        padding-left: 15px;
+        padding-right: 15px;
+      }
+      h1 {
+        font-size: 1.8rem;
+      }
+    }
+  </style>
 </head>
 <body>
 
-<header>
-  <h1>Pauta de Avaliação</h1>
-  <p>Registo de alunos e classificações</p>
-</header>
+<!-- Navbar -->
+<nav class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="3trimestre.html">📝 3º Trimestre</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav ms-auto">
+        <li class="nav-item"><a class="nav-link active" href="pauta_alunos.html">📝 Formulário</a></li>
+        <li class="nav-item"><a class="nav-link" href="tabela.html">📊 Tabela</a></li>
+      </ul>
+    </div>
+  </div>
+</nav>
 
-<!-- FORM -->
-<div class="card">
-  <div class="card-title">➕ Dados do Aluno</div>
-  <div class="form-grid">
-    <div class="form-group">
-      <label>Nome completo</label>
-      <input type="text" id="nome" placeholder="ex: Ana Ferreira">
-    </div>
-    <div class="form-group">
-      <label>Idade</label>
-      <input type="number" id="idade" placeholder="ex: 16" min="1" max="99">
-    </div>
-    <div class="form-group">
-      <label>Sala</label>
-      <input type="text" id="sala" placeholder="ex: 101">
-    </div>
-    <div class="form-group">
-      <label>Turma</label>
-      <input type="text" id="turma" placeholder="ex: 10.ª A">
-    </div>
-    <div class="form-group">
-      <label>Nº do Aluno</label>
-      <input type="text" id="numero" placeholder="ex: 2024001">
-    </div>
-    <div class="form-group">
-      <label>BI / NIF</label>
-      <input type="text" id="bi" placeholder="ex: 001234567LA041">
+<div class="container mt-5 pt-5">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="mb-2">Pauta de Avaliação</h1>
+      <p class="text-muted mb-4">Registo de alunos e classificações</p>
     </div>
   </div>
 
-  <hr class="divider">
-  <div class="card-title">📊 Notas (0 – 20)</div>
-  <div class="notas-row">
-    <div class="form-group" id="grp-n1">
-      <label>Nota 1</label>
-      <input type="number" id="nota1" class="nota" placeholder="0 – 20" min="0" max="20" step="0.1">
-      <span class="error-msg">Insira um valor entre 0 e 20</span>
+  <!-- FORM -->
+  <form id="formAluno" class="card p-3 p-md-4 shadow-sm">
+    <h5 class="card-title mb-3">➕ Dados do Aluno</h5>
+    <div class="row g-3">
+      <div class="col-12 col-md-6">
+        <label class="form-label">Nome completo *</label>
+        <input type="text" id="nome" class="form-control" required>
+      </div>
+      <div class="col-6 col-md-2">
+        <label class="form-label">Idade *</label>
+        <input type="number" id="idade" class="form-control" min="1" max="99" required>
+      </div>
+      <div class="col-6 col-md-2">
+        <label class="form-label">Sala *</label>
+        <input type="text" id="sala" class="form-control" placeholder="Ex: 101" required>
+      </div>
+      <div class="col-6 col-md-2">
+        <label class="form-label">Turma *</label>
+        <input type="text" id="turma" class="form-control" placeholder="Ex: A" required>
+      </div>
+      <div class="col-6 col-md-4">
+        <label class="form-label">Nº do Aluno *</label>
+        <input type="text" id="numero" class="form-control" required>
+      </div>
+      <div class="col-6 col-md-4">
+        <label class="form-label">Turno *</label>
+        <select id="turno" class="form-select" required>
+          <option value="">Selecione...</option>
+          <option value="Manhã">Manhã</option>
+          <option value="Tarde">Tarde</option>
+          <option value="Noite">Noite</option>
+        </select>
+      </div>
     </div>
-    <div class="form-group" id="grp-n2">
-      <label>Nota 2</label>
-      <input type="number" id="nota2" class="nota" placeholder="0 – 20" min="0" max="20" step="0.1">
-      <span class="error-msg">Insira um valor entre 0 e 20</span>
-    </div>
-    <div class="form-group" id="grp-n3">
-      <label>Nota 3</label>
-      <input type="number" id="nota3" class="nota" placeholder="0 – 20" min="0" max="20" step="0.1">
-      <span class="error-msg">Insira um valor entre 0 e 20</span>
-    </div>
-  </div>
 
-  <div class="btn-row">
-    <button class="btn btn-primary" onclick="adicionarAluno()">Adicionar aluno</button>
-    <button class="btn btn-outline" onclick="limparFormulario()">Limpar campos</button>
+    <hr class="my-4">
+    <h5 class="card-title mb-3">📊 Notas (0 – 20)</h5>
+    <div class="row g-3">
+      <div class="col-12 col-md-4">
+        <label class="form-label">Nota 1</label>
+        <input type="number" id="nota1" class="form-control" min="0" max="20" step="0.1" required>
+      </div>
+      <div class="col-12 col-md-4">
+        <label class="form-label">Nota 2</label>
+        <input type="number" id="nota2" class="form-control" min="0" max="20" step="0.1" required>
+      </div>
+      <div class="col-12 col-md-4">
+        <label class="form-label">Nota 3</label>
+        <input type="number" id="nota3" class="form-control" min="0" max="20" step="0.1" required>
+      </div>
+    </div>
+
+    <div class="mt-4 d-flex flex-column flex-sm-row gap-2">
+      <button type="submit" class="btn btn-primary">➕ Adicionar aluno</button>
+      <button type="reset" class="btn btn-secondary" onclick="limparFormulario()">🗑️ Limpar campos</button>
+      <button type="button" class="btn btn-info" onclick="verTabela()">📊 Ver Tabela</button>
+    </div>
+  </form>
+
+  <!-- Alertas de feedback -->
+  <div id="alertMessage" style="display: none;" class="alert alert-success alert-dismissible fade show mt-3" role="alert">
+    <span id="alertText"></span>
+    <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
   </div>
 </div>
 
-
-<div class="table-header-row">
-  <div class="table-title">📋 Lista de alunos</div>
-  <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;">
-    <div class="counter">Total: <span id="cnt-total">0</span> &nbsp;|&nbsp; ✅ <span id="cnt-apto">0</span> &nbsp;|&nbsp; ⚠️ <span id="cnt-recurso">0</span> &nbsp;|&nbsp; ❌ <span id="cnt-napto">0</span></div>
-    <button class="btn btn-danger" onclick="limparTudo()">🗑 Limpar tudo</button>
-  </div>
-</div>
-
-<div class="table-wrapper">
-  <table id="tabela">
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>Nome</th>
-        <th>Idade</th>
-        <th>Sala</th>
-        <th>Turma</th>
-        <th>Nº Aluno</th>
-        <th>BI</th>
-        <th>Nota 1</th>
-        <th>Nota 2</th>
-        <th>Nota 3</th>
-        <th>Média</th>
-        <th>Resultado</th>
-        <th>–</th>
-      </tr>
-    </thead>
-    <tbody id="tbody">
-      <tr id="empty-row">
-        <td colspan="13">
-          <div class="empty">
-            <div class="icon">📄</div>
-            Nenhum aluno registado ainda.
-          </div>
-        </td>
-      </tr>
-    </tbody>
-  </table>
-</div>
-
-<div id="toast"></div>
-
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-  let alunos = [];
-  let contador = 0;
+  // Inicializar array de alunos do localStorage
+  let alunos = JSON.parse(localStorage.getItem('alunos')) || [];
+  let contador = alunos.length > 0 ? Math.max(...alunos.map(a => a.id)) : 0;
 
-  function calcularResultado(media) {
-    if (media >= 10) return { label: 'Apto', cls: 'apto' };
-    if (media >= 8)  return { label: 'Recurso', cls: 'recurso' };
-    return { label: 'Não Apto', cls: 'napto' };
-  }
-
-  function validarNota(val) {
-    const n = parseFloat(val);
-    return !isNaN(n) && n >= 0 && n <= 20;
-  }
-
-  function adicionarAluno() {
-    // Recolher campos base
-    const campos = {
-      nome:   document.getElementById('nome').value.trim(),
-      idade:  document.getElementById('idade').value.trim(),
-      sala:   document.getElementById('sala').value.trim(),
-      turma:  document.getElementById('turma').value.trim(),
-      numero: document.getElementById('numero').value.trim(),
-      bi:     document.getElementById('bi').value.trim(),
-    };
-
-    // Validação simples dos campos obrigatórios
-    let ok = true;
-    for (const [k, v] of Object.entries(campos)) {
-      if (!v) {
-        toast(`O campo "${k}" é obrigatório.`, 'erro');
-        ok = false;
-        break;
-      }
-    }
-    if (!ok) return;
-
-    // Notas
-    const n1v = document.getElementById('nota1').value;
-    const n2v = document.getElementById('nota2').value;
-    const n3v = document.getElementById('nota3').value;
-
-    let notasOk = true;
-    const grpIds = ['grp-n1','grp-n2','grp-n3'];
-    const vals = [n1v, n2v, n3v];
-    vals.forEach((v, i) => {
-      const grp = document.getElementById(grpIds[i]);
-      if (!validarNota(v)) {
-        grp.classList.add('has-error');
-        notasOk = false;
-      } else {
-        grp.classList.remove('has-error');
-      }
-    });
-    if (!notasOk) { toast('Verifique as notas (0 a 20).', 'erro'); return; }
-
-    const n1 = parseFloat(n1v);
-    const n2 = parseFloat(n2v);
-    const n3 = parseFloat(n3v);
-    const media = ((n1 + n2 + n3) / 3);
-
-    contador++;
-    const aluno = { id: contador, ...campos, n1, n2, n3, media };
-    alunos.push(aluno);
-
-    renderTabela();
-    limparFormulario();
-    toast(`✔ ${campos.nome} adicionado com sucesso!`);
-  }
-
-  function removerAluno(id) {
-    alunos = alunos.filter(a => a.id !== id);
-    renderTabela();
-    toast('Aluno removido.');
+  function verTabela() {
+    window.location.href = 'tabelas.html';
   }
 
   function limparFormulario() {
-    ['nome','idade','sala','turma','numero','bi','nota1','nota2','nota3']
-      .forEach(id => document.getElementById(id).value = '');
-    ['grp-n1','grp-n2','grp-n3']
-      .forEach(id => document.getElementById(id).classList.remove('has-error'));
-    document.getElementById('nome').focus();
+    document.getElementById('formAluno').reset();
   }
 
-  function limparTudo() {
-    if (alunos.length === 0) return;
-    if (!confirm('Tem a certeza que deseja apagar todos os alunos?')) return;
-    alunos = [];
-    renderTabela();
-    toast('Lista limpa.');
+  function mostrarAlerta(mensagem, tipo = 'success') {
+    const alertDiv = document.getElementById('alertMessage');
+    const alertText = document.getElementById('alertText');
+    alertText.textContent = mensagem;
+    alertDiv.className = `alert alert-${tipo} alert-dismissible fade show mt-3`;
+    alertDiv.style.display = 'block';
+    
+    // Esconder alerta após 3 segundos
+    setTimeout(() => {
+      alertDiv.style.display = 'none';
+    }, 3000);
   }
 
-  function renderTabela() {
-    const tbody = document.getElementById('tbody');
-    tbody.innerHTML = '';
+  document.getElementById('formAluno').addEventListener('submit', function(e) {
+    e.preventDefault();
 
-    if (alunos.length === 0) {
-      tbody.innerHTML = `<tr id="empty-row"><td colspan="13">
-        <div class="empty"><div class="icon">📄</div>Nenhum aluno registado ainda.</div>
-      </td></tr>`;
-      atualizarContadores();
+    // Validar campos obrigatórios
+    const nome = document.getElementById('nome').value.trim();
+    const idade = document.getElementById('idade').value.trim();
+    const sala = document.getElementById('sala').value.trim();
+    const turma = document.getElementById('turma').value.trim();
+    const numero = document.getElementById('numero').value.trim();
+    const turno = document.getElementById('turno').value;
+
+    if (!nome || !idade || !sala || !turma || !numero || !turno) {
+      mostrarAlerta('Por favor, preencha todos os campos obrigatórios!', 'danger');
       return;
     }
 
-    alunos.forEach((a, idx) => {
-      const res = calcularResultado(a.media);
-      const mediaClass = `media-${res.cls}`;
-      const tr = document.createElement('tr');
-      tr.innerHTML = `
-        <td style="color:var(--muted)">${idx + 1}</td>
-        <td style="font-weight:500">${esc(a.nome)}</td>
-        <td>${esc(a.idade)}</td>
-        <td>${esc(a.sala)}</td>
-        <td>${esc(a.turma)}</td>
-        <td style="color:var(--accent)">${esc(a.numero)}</td>
-        <td style="color:var(--muted);font-size:0.75rem">${esc(a.bi)}</td>
-        <td>${a.n1.toFixed(1)}</td>
-        <td>${a.n2.toFixed(1)}</td>
-        <td>${a.n3.toFixed(1)}</td>
-        <td class="media-badge ${mediaClass}">${a.media.toFixed(2)}</td>
-        <td><span class="badge badge-${res.cls}">${res.label}</span></td>
-        <td><button class="btn-del" onclick="removerAluno(${a.id})" title="Remover">✕</button></td>
-      `;
-      tbody.appendChild(tr);
-    });
+    const n1 = parseFloat(document.getElementById('nota1').value);
+    const n2 = parseFloat(document.getElementById('nota2').value);
+    const n3 = parseFloat(document.getElementById('nota3').value);
 
-    atualizarContadores();
-  }
+    if (isNaN(n1) || isNaN(n2) || isNaN(n3)) {
+      mostrarAlerta('Por favor, preencha todas as notas!', 'danger');
+      return;
+    }
 
-  function atualizarContadores() {
-    const total   = alunos.length;
-    const apto    = alunos.filter(a => calcularResultado(a.media).cls === 'apto').length;
-    const recurso = alunos.filter(a => calcularResultado(a.media).cls === 'recurso').length;
-    const napto   = alunos.filter(a => calcularResultado(a.media).cls === 'napto').length;
-    document.getElementById('cnt-total').textContent   = total;
-    document.getElementById('cnt-apto').textContent    = apto;
-    document.getElementById('cnt-recurso').textContent = recurso;
-    document.getElementById('cnt-napto').textContent   = napto;
-  }
+    if ([n1, n2, n3].some(n => n < 0 || n > 20)) {
+      mostrarAlerta('Notas inválidas. Insira valores entre 0 e 20.', 'danger');
+      return;
+    }
 
-  function esc(str) {
-    return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
-  }
+    const media = ((n1 + n2 + n3) / 3);
+    contador++;
+    
+    const aluno = { 
+      id: contador, 
+      nome, 
+      idade: parseInt(idade), 
+      sala, 
+      turma, 
+      numero, 
+      turno, 
+      n1, 
+      n2, 
+      n3, 
+      media 
+    };
 
-  let toastTimer;
-  function toast(msg, tipo = 'ok') {
-    const t = document.getElementById('toast');
-    t.textContent = msg;
-    t.style.borderColor = tipo === 'erro' ? 'var(--napto)' : 'var(--apto)';
-    t.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => t.classList.remove('show'), 2800);
-  }
+    alunos.push(aluno);
+    localStorage.setItem('alunos', JSON.stringify(alunos));
+
+    mostrarAlerta(`✅ Aluno "${nome}" adicionado com sucesso!`);
+    this.reset();
+    
+    // Opcional: Perguntar se quer ver a tabela
+    setTimeout(() => {
+      if (confirm('Aluno adicionado! Deseja visualizar a tabela agora?')) {
+        window.location.href = 'tabelas.html';
+      }
+    }, 500);
+  });
 </script>
 </body>
 </html>
